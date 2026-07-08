@@ -1,0 +1,29 @@
+# API version for PersistentVolume resource
+apiVersion: v1
+
+# Type of Kubernetes resource
+kind: PersistentVolume
+
+metadata:
+  # Name of the Persistent Volume
+  name: telecom-pv
+
+spec:
+  # Total storage capacity provided by this PV
+  capacity:
+    storage: 1Gi
+
+  # Defines how the volume can be mounted
+  accessModes:
+    - ReadWriteOnce
+
+  # What happens to the data after the PVC is deleted
+  persistentVolumeReclaimPolicy: Retain
+
+  # Storage class name
+  storageClassName: manual
+
+  # Local storage configuration
+  hostPath:
+    # Directory on the Minikube node that stores the data
+    path: /data/telecom-storage

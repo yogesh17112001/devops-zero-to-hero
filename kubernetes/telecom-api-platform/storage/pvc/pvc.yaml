@@ -1,0 +1,26 @@
+# API Version
+apiVersion: v1
+
+# Kubernetes Resource Type
+kind: PersistentVolumeClaim
+
+metadata:
+  # Name of the PVC
+  name: telecom-pvc
+
+  # Namespace where PVC will be created
+  namespace: telecom
+
+spec:
+
+  # Access mode required by the application
+  accessModes:
+    - ReadWriteOnce
+
+  # Requested storage size
+  resources:
+    requests:
+      storage: 1Gi
+
+  # Must match the PV StorageClass
+  storageClassName: manual

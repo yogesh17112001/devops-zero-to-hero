@@ -1,26 +1,27 @@
 # Kubernetes API version
 apiVersion: apps/v1
 
-# Resource type
+# Type of Kubernetes resource
 kind: Deployment
 
 metadata:
-  # Deployment name
+
+  # Name of the deployment
   name: telecom-api
 
-  # Namespace where it will be created
+  # Namespace where deployment will be created
   namespace: telecom
 
-  # Labels help identify resources
+  # Labels for identifying this deployment
   labels:
     app: telecom-api
 
 spec:
 
-  # Number of Pod replicas
+  # Number of pod replicas
   replicas: 2
 
-  # Rolling update strategy
+  # Deployment update strategy
   strategy:
     type: RollingUpdate
 
@@ -28,11 +29,12 @@ spec:
       maxUnavailable: 1
       maxSurge: 1
 
-  # Deployment manages Pods having this label
+  # Deployment manages pods having this label
   selector:
     matchLabels:
       app: telecom-api
 
+  # Blueprint of the Pod
   template:
 
     metadata:
@@ -46,34 +48,20 @@ spec:
 
       - name: telecom-api-container
 
-        # Docker image
         image: telecom-api:v1
 
-        # Local image (important for Minikube)
         imagePullPolicy: Never
 
         ports:
         - containerPort: 3000
-
-        ##################################
-        # ConfigMap Environment Variables
-        ##################################
 
         envFrom:
 
         - configMapRef:
             name: telecom-api-config
 
-        ##################################
-        # Secret Environment Variables
-        ##################################
-
         - secretRef:
             name: telecom-api-secret
-
-        ##################################
-        # CPU & Memory Requests/Limits
-        ##################################
 
         resources:
 
@@ -85,10 +73,6 @@ spec:
             cpu: "500m"
             memory: "512Mi"
 
-        ##################################
-        # Readiness Probe
-        ##################################
-
         readinessProbe:
 
           httpGet:
@@ -98,10 +82,6 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
 
-        ##################################
-        # Liveness Probe
-        ##################################
-
         livenessProbe:
 
           httpGet:
@@ -110,3 +90,20 @@ spec:
 
           initialDelaySeconds: 20
           periodSeconds: 20
+
+        #########################################
+        # Mount Persistent Volume inside Container
+        #########################################
+
+        volumeMounts:
+        - name: telecom-storage
+          mountPath: /data
+
+      #########################################
+      # Volumes used by the Pod
+      #########################################
+
+      volumes:
+      - name: telecom-storage
+        persistentVolumeClaim:
+          claimName: telecom-pvc
