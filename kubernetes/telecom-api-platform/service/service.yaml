@@ -1,0 +1,33 @@
+# Kubernetes API Version
+apiVersion: v1
+
+# Resource Type
+kind: Service
+
+metadata:
+
+  # Service Name
+  name: telecom-api-service
+
+  # Namespace
+  namespace: telecom
+
+spec:
+
+  # Service Type
+  type: ClusterIP
+
+  # Select Pods having this label
+  selector:
+    app: telecom-api
+
+  ports:
+
+  # Service Port
+  - port: 80
+
+    # Pod Port
+    targetPort: 3000
+
+    # Protocol
+    protocol: TCP

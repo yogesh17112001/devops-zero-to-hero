@@ -1,0 +1,12 @@
+{
+  "name": "telecom-recharge-api",
+  "version": "1.0.0",
+  "description": "Production Style Telecom Recharge API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -1,0 +1,21 @@
+# Ignore node dependencies
+node_modules
+
+# Git repository
+.git
+
+# Git ignore file
+.gitignore
+
+# Docker ignore file
+.dockerignore
+
+# Logs
+*.log
+
+# Environment variables
+.env
+
+# VS Code settings
+.vscode
+

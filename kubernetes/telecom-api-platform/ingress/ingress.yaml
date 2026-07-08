@@ -1,0 +1,50 @@
+# Kubernetes API Version
+apiVersion: networking.k8s.io/v1
+
+# Resource Type
+kind: Ingress
+
+metadata:
+
+  # Name of the Ingress
+  name: telecom-api-ingress
+
+  # Namespace where Ingress will be created
+  namespace: telecom
+
+  # Tell Kubernetes to use the NGINX Ingress Controller
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+
+spec:
+
+  # Ingress Controller to use
+  ingressClassName: nginx
+
+  # Routing Rules
+  rules:
+
+  # Host name users will access
+  - host: telecom.local
+
+    http:
+
+      paths:
+
+      # Match everything after /
+      - path: /
+
+        # Prefix means everything starting with /
+        pathType: Prefix
+
+        backend:
+
+          service:
+
+            # Service Name
+            name: telecom-api-service
+
+            port:
+
+              # Service Port
+              number: 80
