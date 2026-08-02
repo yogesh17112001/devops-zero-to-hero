@@ -1,0 +1,33 @@
+# Kubernetes API Version
+apiVersion: v1
+
+# Resource Type
+kind: Service
+
+metadata:
+
+  # Service Name
+  name: {{ .Release.Name }}
+
+  # Namespace
+  namespace: {{ .Release.Namespace }}
+
+spec:
+
+  # Service Type
+  type: {{ .Values.service.type }}
+
+  # Select Pods having this label
+  selector:
+    app: {{ .Release.Name }}
+
+  ports:
+
+  # Service Port
+  - port: {{ .Values.service.port }}
+
+    # Pod Port
+    targetPort: 3000
+
+    # Protocol
+    protocol: TCP

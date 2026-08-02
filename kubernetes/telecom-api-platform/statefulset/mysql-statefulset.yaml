@@ -1,0 +1,81 @@
+# Kubernetes API Version
+apiVersion: apps/v1
+
+# Resource Type
+kind: StatefulSet
+
+metadata:
+
+  # Name of the StatefulSet
+  name: mysql
+
+  # Namespace
+  namespace: telecom
+
+  # Labels
+  labels:
+    app: mysql
+
+spec:
+
+  # Name of the Headless Service
+  serviceName: mysql
+
+  # Number of replicas
+  replicas: 1
+
+  # Match Pods with this label
+  selector:
+    matchLabels:
+      app: mysql
+
+  # Pod Template
+  template:
+
+    metadata:
+
+      labels:
+        app: mysql
+
+    spec:
+
+      containers:
+
+      - name: mysql
+
+        image: mysql:8.0
+
+        ports:
+
+        - containerPort: 3306
+
+        env:
+
+        - name: MYSQL_ROOT_PASSWORD
+          value: root123
+
+        - name: MYSQL_DATABASE
+          value: telecomdb
+
+        volumeMounts:
+
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+
+  # Automatically create PVC for every Pod
+  volumeClaimTemplates:
+
+  - metadata:
+
+      name: mysql-storage
+
+    spec:
+
+      accessModes:
+      - ReadWriteOnce
+
+      resources:
+
+        requests:
+
+          storage: 1Gi

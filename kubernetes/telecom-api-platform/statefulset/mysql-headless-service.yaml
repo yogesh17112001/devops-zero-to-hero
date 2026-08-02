@@ -1,0 +1,27 @@
+# Kubernetes API Version
+apiVersion: v1
+
+# Resource Type
+kind: Service
+
+metadata:
+
+  # Name of the Service
+  name: mysql
+
+  # Namespace
+  namespace: telecom
+
+spec:
+
+  # Makes this a Headless Service
+  clusterIP: None
+
+  # Select Pods having this label
+  selector:
+    app: mysql
+
+  # Port configuration
+  ports:
+  - port: 3306
+    targetPort: 3306

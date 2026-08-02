@@ -1,0 +1,107 @@
+# Kubernetes API version
+apiVersion: apps/v1
+
+# Type of Kubernetes resource
+kind: Deployment
+
+metadata:
+
+  # Name of the deployment
+  name: {{ include "telecom.fullname" . }}
+
+  # Namespace where deployment will be created
+  namespace: {{ .Release.Namespace }}
+
+  # Labels for identifying this deployment
+  labels:
+    app: {{ .Release.Name }}
+
+spec:
+
+  # Number of pod replicas
+  replicas: {{ .Values.replicaCount }}
+
+  # Deployment update strategy
+  strategy:
+    type: RollingUpdate
+
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
+  # Deployment manages pods having this label
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+
+  # Blueprint of the Pod
+  template:
+
+    metadata:
+
+      labels:
+        app: {{ .Release.Name }}
+
+    spec:
+      template:
+        spec:
+          serviceAccountName: {{ .Values.serviceAccount.name }}
+
+      containers:
+
+      - name: telecom-api-container
+
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        ports:
+        - containerPort: 3000
+
+        envFrom:
+
+        - configMapRef:
+            name: {{ .Release.Name }}-config
+
+        - secretRef:
+            name: {{ .Release.Name }}-secret
+
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+
+
+
+        readinessProbe:
+
+          httpGet:
+            path: /
+            port: 3000
+
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        livenessProbe:
+
+          httpGet:
+            path: /
+            port: 3000
+
+          initialDelaySeconds: 20
+          periodSeconds: 20
+
+        #########################################
+        # Mount Persistent Volume inside Container
+        #########################################
+
+        volumeMounts:
+        - name: telecom-storage
+          mountPath: /data
+
+      #########################################
+      # Volumes used by the Pod
+      #########################################
+
+      volumes:
+      - name: telecom-storage
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-pvc

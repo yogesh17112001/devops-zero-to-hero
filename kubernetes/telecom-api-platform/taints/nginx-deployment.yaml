@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-taint-demo
+  namespace: telecom
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-taint-demo
+  template:
+    metadata:
+      labels:
+        app: nginx-taint-demo
+    spec:
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "database"
+        effect: "NoSchedule"
+
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80

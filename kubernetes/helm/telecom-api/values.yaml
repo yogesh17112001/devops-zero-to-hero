@@ -1,0 +1,56 @@
+replicaCount: 2
+
+image:
+  repository: telecom-api
+  tag: v1
+  pullPolicy: Never
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+serviceAccount:
+  name: developer
+
+
+config:
+  appVersion: "1.0.0"
+  environment: "DEV"
+  logLevel: "INFO"
+
+
+secret:
+  dbUsername: telecom_user
+  dbPassword: telecom@123
+  jwtSecret: mySuperSecretKey
+
+
+persistence:
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  storageClass: manual
+
+ingress:
+  className: nginx
+  host: telecom.local
+
+
+serviceAccount:
+  name: developer
+
+rbac:
+  roleName: pod-reader
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70

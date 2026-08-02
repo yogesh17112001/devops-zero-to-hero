@@ -1,0 +1,43 @@
+# Kubernetes API Version
+apiVersion: apps/v1
+
+# Resource Type
+kind: Deployment
+
+metadata:
+
+  # Deployment Name
+  name: nginx-node-selector
+
+  # Namespace
+  namespace: telecom
+
+spec:
+
+  # Number of replicas
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: nginx-node-selector
+
+  template:
+
+    metadata:
+      labels:
+        app: nginx-node-selector
+
+    spec:
+
+      # Run only on nodes having this label
+      nodeSelector:
+        environment: dev
+
+      containers:
+
+      - name: nginx
+
+        image: nginx:latest
+
+        ports:
+        - containerPort: 80

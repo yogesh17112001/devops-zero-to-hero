@@ -1,0 +1,45 @@
+# Kubernetes API Version
+apiVersion: apps/v1
+
+# Resource Type
+kind: DaemonSet
+
+metadata:
+
+  # Name of the DaemonSet
+  name: fluent-bit
+
+  # Namespace
+  namespace: telecom
+
+  # Labels
+  labels:
+    app: fluent-bit
+
+spec:
+
+  # Select Pods with this label
+  selector:
+
+    matchLabels:
+      app: fluent-bit
+
+  # Pod Template
+  template:
+
+    metadata:
+
+      labels:
+        app: fluent-bit
+
+    spec:
+
+      containers:
+
+      - name: fluent-bit
+
+        image: nginx:latest
+
+        ports:
+
+        - containerPort: 80

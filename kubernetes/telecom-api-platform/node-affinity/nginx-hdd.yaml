@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-hdd
+  namespace: telecom
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: nginx-hdd
+
+  template:
+    metadata:
+      labels:
+        app: nginx-hdd
+
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: disktype
+                operator: In
+                values:
+                - hdd
+
+      containers:
+      - name: nginx
+        image: nginx:latest

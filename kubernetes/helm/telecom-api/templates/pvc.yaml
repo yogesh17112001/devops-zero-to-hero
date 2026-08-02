@@ -1,0 +1,26 @@
+# API Version
+apiVersion: v1
+
+# Kubernetes Resource Type
+kind: PersistentVolumeClaim
+
+metadata:
+  # Name of the PVC
+  name: {{ .Release.Name }}-pvc
+
+  # Namespace where PVC will be created
+  namespace: {{ .Release.Namespace }}
+
+spec:
+
+  # Access mode required by the application
+  accessModes:
+    - {{ .Values.persistence.accessMode }}
+
+  # Requested storage size
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size }}
+
+  # Must match the PV StorageClass
+  storageClassName: {{ .Values.persistence.storageClass }}

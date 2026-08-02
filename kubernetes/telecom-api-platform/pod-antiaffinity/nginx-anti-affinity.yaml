@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: nginx-anti-affinity
+  namespace: telecom
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: nginx-anti
+
+  template:
+    metadata:
+      labels:
+        app: nginx-anti
+
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - nginx-anti
+
+            topologyKey: kubernetes.io/hostname
+
+      containers:
+      - name: nginx
+        image: nginx:latest
